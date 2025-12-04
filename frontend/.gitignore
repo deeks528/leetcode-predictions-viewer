@@ -27,5 +27,3 @@ coverage/
 /.pnp.*
 tmp/
 temp/
-
-./src/constants.js
