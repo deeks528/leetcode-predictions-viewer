@@ -102,12 +102,12 @@ app = FastAPI(
     
     ## Authentication
     
-    Currently no authentication required. Consider adding API keys for production.
+    Currently no authentication required.
     """,
     version="1.0.0",
     contact={
         "name": "LeetCode Rating Prediction",
-        "url": "https://github.com/yourusername/leetcode-rating-prediction",
+        "url": "https://github.com/deeks528/leetcode-predictions-viewer",
     },
     license_info={
         "name": "MIT",

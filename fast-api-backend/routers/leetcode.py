@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Create router
 router = APIRouter(
-    prefix="",  # No prefix, routes will be at root level
+    prefix="",
     tags=["leetcode"],
     responses={
         404: {"model": ErrorResponse, "description": "Not found"},
@@ -78,12 +78,12 @@ async def get_leetcode_predictions(
     channelNo: Optional[str] = Query(
         None,
         description="Discord channel ID to fetch users from Firebase",
-        example="102",
+        example="",
     ),
     username: Optional[str] = Query(
         None,
         description="LeetCode username(s), comma-separated for multiple users",
-        example="deekshith06,S_Sarim",
+        example="",
     ),
 ) -> LeetCodeResponse:
     """
@@ -317,12 +317,12 @@ async def get_obtained_ratings(
     username: Optional[str] = Query(
         None,
         description="Comma-separated LeetCode usernames",
-        example="deekshith06,S_Sarim",
+        example="",
     ),
     channelNo: Optional[str] = Query(
         None,
         description="Discord channel ID to fetch users from Firebase",
-        example="102",
+        example="",
     ),
 ) -> Dict[str, ObtainedUserResult]:
     """
