@@ -1,0 +1,452 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Dark Theme (Default - Retro Terminal) */
+:root {
+  --bg-color: #000000;
+  --text-color: #00ff00;
+  --dim-text: #008f00;
+  --border-color: #00ff00;
+  --input-bg: #0a0a0a;
+  --input-focus-bg: #0f0f0f;
+  --input-focus-border: #00ff00;
+  --content-bg: #050505;
+  --card-bg: #000000;
+  --card-hover-bg: #0a0a0a;
+  --highlight: #00ff00;
+  --highlight-text: #000000;
+  --shadow-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+  --crt-line: rgba(0, 255, 0, 0.1);
+  --scanline-bg: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  --code-color: #ffff00;
+  --error-color: #ff0000;
+  --content-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+/* Light Theme (Retro Paper) */
+[data-theme="light"] {
+  --bg-color: #f5f5dc;
+  --text-color: #2c1810;
+  --dim-text: #8b7355;
+  --border-color: #2c1810;
+  --input-bg: #faf8f0;
+  --input-focus-bg: #fff9e6;
+  --input-focus-border: #8b4513;
+  --content-bg: #fffef8;
+  --card-bg: #fef9e7;
+  --card-hover-bg: #fff8dc;
+  --highlight: #2c1810;
+  --highlight-text: #f5f5dc;
+  --shadow-glow: 0 0 5px rgba(44, 24, 16, 0.3);
+  --crt-line: rgba(44, 24, 16, 0.05);
+  --scanline-bg: linear-gradient(rgba(255, 250, 240, 0) 50%, rgba(139, 115, 85, 0.03) 50%);
+  --code-color: #8b4513;
+  --error-color: #8b0000;
+  --content-shadow: 0 0 15px rgba(44, 24, 16, 0.1);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'VT323', monospace;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  -webkit-font-smoothing: none;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* CRT Scanline Effect */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--scanline-bg);
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+body>div {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  overflow: auto;
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: var(--shadow-glow);
+}
+
+.flex {
+  display: flex;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Retro Buttons */
+button {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0px var(--dim-text);
+  transition: all 0.1s steps(2);
+}
+
+button:hover {
+  background-color: var(--dim-text);
+  color: var(--bg-color);
+  box-shadow: 2px 2px 0px var(--text-color);
+  transform: translate(2px, 2px);
+}
+
+button:active {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+button.active-button {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+/* Main Content Section */
+#contentSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--content-bg);
+  border: 2px solid var(--border-color);
+  padding: 1.5rem;
+  box-sizing: border-box;
+  flex-grow: 1;
+  box-shadow: var(--content-shadow);
+  position: relative;
+}
+
+#contentSection::before {
+  content: "> leetcode_rating_predictions.exe <";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: var(--bg-color);
+  padding: 0 5px;
+  font-size: 1.125rem;
+  color: var(--dim-text);
+}
+
+/* Form Styling */
+#ratingForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px dashed var(--dim-text);
+}
+
+#radioButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#radioButtons label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Custom Radio Button */
+input[type="radio"] {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--border-color);
+  background: var(--bg-color);
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1rem - 8px);
+  height: calc(1rem - 8px);
+  background: var(--text-color);
+  box-shadow: 0 0 5px var(--text-color);
+}
+
+/* Inputs */
+#ratingForm input[type="text"] {
+  background-color: var(--input-bg);
+  border: 2px solid var(--dim-text);
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-color);
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  outline: none;
+  flex-grow: 1;
+  transition: all 0.2s ease;
+}
+
+#ratingForm input[type="text"]:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: var(--shadow-glow);
+  background-color: var(--input-focus-bg);
+  transform: translateY(-1px);
+}
+
+#ratingForm .or-text {
+  font-size: 1.2rem;
+  color: var(--dim-text);
+  text-transform: uppercase;
+}
+
+/* Header */
+.sketch-border {
+  border: 4px double var(--border-color);
+  background-color: var(--bg-color);
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 15px var(--shadow-glow);
+}
+
+.sketch-border h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: var(--text-color);
+}
+
+/* User Grid */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.user-card {
+  background-color: var(--card-bg);
+  border: 2px solid var(--border-color);
+  padding: 1rem;
+  position: relative;
+  box-shadow: 5px 5px 0px var(--dim-text);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.user-card:hover {
+  background-color: var(--card-hover-bg);
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px var(--dim-text);
+}
+
+.user-card::before {
+  content: "USER_DATA";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: var(--bg-color);
+  padding: 0 5px;
+  font-size: 0.8rem;
+  color: var(--dim-text);
+}
+
+.user-card .username {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+  text-align: center;
+  display: block;
+  border-bottom: 1px dashed var(--dim-text);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-shadow: var(--shadow-glow);
+}
+
+.user-card a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.user-card a:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+.user-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.user-card li {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.user-card code {
+  color: var(--code-color);
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+}
+
+.not-participated {
+  color: var(--error-color);
+  text-transform: uppercase;
+  font-weight: bold;
+  text-shadow: 0 0 5px var(--error-color);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background-color: var(--bg-color);
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px var(--dim-text);
+  transition: all 0.1s steps(2);
+  text-transform: uppercase;
+}
+
+.theme-toggle:hover {
+  background-color: var(--dim-text);
+  color: var(--bg-color);
+  box-shadow: 2px 2px 0px var(--text-color);
+  transform: translate(2px, 2px);
+}
+
+.theme-toggle:active {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  box-shadow: none;
+  transform: translate(4px, 4px);
+}
+
+/* Header Icon */
+.header-icon {
+  margin-right: 1rem;
+}
+
+/* Contest Title */
+.contest-title {
+  align-self: center;
+  font-size: large;
+  margin-bottom: 5vh;
+}
+
+.contest-name {
+  font-weight: bold;
+}
+
+/* Status Messages */
+.status-message {
+  text-align: center;
+  color: var(--text-color);
+}
+
+.loading-status {
+  text-align: center;
+  padding: 1rem;
+}
+
+.status-detail {
+  text-align: center;
+  color: var(--dim-text);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.error-message {
+  text-align: center;
+  color: var(--error-color);
+  font-weight: bold;
+}
+
+footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--dim-text);
+  font-size: 1rem;
+  border-top: 1px solid var(--dim-text);
+  padding-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #ratingForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #ratingForm input[type="text"],
+  #ratingForm button {
+    width: 100%;
+  }
+}
