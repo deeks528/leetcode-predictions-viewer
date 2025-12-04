@@ -1,0 +1,5 @@
+.archive
+.env
+.env.example
+summaries
+.venv
