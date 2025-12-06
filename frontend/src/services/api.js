@@ -10,8 +10,9 @@ import { URL } from '../constants';
  * @param {string} params.username - LeetCode username (optional)
  * @returns {Promise} Response with contest predictions
  */
-export const fetchPredictions = async (params) => {
+export const fetchPredictions = async (params, next) => {
     const response = await axios.get(`${URL.API_BASE_URL}${URL.ENDPOINTS.PREDICTIONS}`, { params });
+    next?.();
     return response.data;
 };
 
@@ -46,12 +47,12 @@ export const fetchContestData = async (params, callbacks = {}) => {
     callbacks.onActualRatingsStart?.();
 
     const [predictionsResponse, actualRatingsResponse] = await Promise.allSettled([
-        fetchPredictions(requestParams),
+        fetchPredictions(requestParams, callbacks.onPredictionsEnd),
         fetchActualRatings(requestParams)
     ]);
 
     // End loading states
-    callbacks.onPredictionsEnd?.();
+    // callbacks.onPredictionsEnd?.();
     callbacks.onActualRatingsEnd?.();
 
     return {

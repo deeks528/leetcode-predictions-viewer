@@ -193,7 +193,9 @@ function App() {
                         <a href={user.link}>{user.username}</a>{user.error ? (
                           <>
                             : <code>{obtained[user.username]?.rating !== undefined ? obtained[user.username]?.rating.toFixed(2) : obtained[user.username]?.rating}</code>
-                          </>) : (<></>)
+                          </>) : (<>
+                            : <code>{obtained[user.username]?.problemsSolved}/{obtained[user.username]?.totalProblems}</code>
+                          </>)
                         }
                       </>
                     ) : (
@@ -215,10 +217,21 @@ function App() {
                           <li>PREDICTED_RATING: <code>{user?.new_rating?.toFixed(2)}</code></li>
                         )}
                         <li>
-                          {user.delta_rating < 0 ? (
-                            <>DELTA: <code>{user.delta_rating?.toFixed(2)}</code></>
+                          {obtained && obtained[user.username] && !obtained[user.username]?.error ? (
+                            <>
+                              {(user.ndelta = (obtained[user.username]?.rating - user?.old_rating)?.toFixed(2)) &&
+                                user.delta_rating < 0 ? (
+                                <>DELTA: <strike><code>{user.delta_rating?.toFixed(2)}</code></strike> </>
+                              ) : (
+                                <>DELTA: <strike><code>+{user.delta_rating?.toFixed(2)}</code></strike> </>
+                              )} <>{user.ndelta < 0 ? <code>{user.ndelta}</code> : <code>+{user.ndelta}</code>}</>
+                            </>
                           ) : (
-                            <>DELTA: <code>+{user.delta_rating?.toFixed(2)}</code></>
+                            user.delta_rating < 0 ? (
+                              <>DELTA: <code>{user.delta_rating?.toFixed(2)}</code></>
+                            ) : (
+                              <>DELTA: <code>+{user.delta_rating?.toFixed(2)}</code></>
+                            )
                           )}
                         </li>
                         <li>ATTENDED: <code>{user.attendedContestsCount}</code></li>
