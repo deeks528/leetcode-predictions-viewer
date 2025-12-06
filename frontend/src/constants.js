@@ -6,8 +6,8 @@
 // API Configuration
 export const URL = {
     // Backend API Base URL
-    // API_BASE_URL: 'https://leetcode-predictions-viewer.onrender.com',
-    API_BASE_URL: 'http://localhost:7667',
+    API_BASE_URL: 'https://leetcode-predictions-viewer.onrender.com',
+    // API_BASE_URL: 'http://localhost:7667',
 
     // API Endpoints
     ENDPOINTS: {
