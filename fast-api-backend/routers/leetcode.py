@@ -7,6 +7,7 @@ Endpoints:
 - POST /cache/clear - Clear the cache (optional)
 """
 
+from helpers.cache import LRUCache
 from fastapi import APIRouter, HTTPException, Query, status
 from typing import Optional, List, Dict
 import logging
@@ -149,7 +150,7 @@ async def get_leetcode_predictions(
             logger.info(f"Added {len(username_list)} usernames from query parameter")
         
         # Remove duplicates and filter invalid values
-        users_list = [u for u in dict.fromkeys(users_list) if u and isinstance(u, str) and u.strip()]
+        users_list = [u for u in set(users_list) if u and isinstance(u, str) and u.strip()]
         
         if not users_list:
             logger.warning("No valid users to process")
@@ -280,6 +281,7 @@ async def clear_cache_endpoint(
             detail=f"Failed to clear cache: {str(e)}",
         )
 
+obtained_cache = LRUCache(capacity=37)
 
 @router.get(
     "/obtained",
@@ -383,13 +385,19 @@ async def get_obtained_ratings(
             logger.info(f"Added {len(username_list)} usernames from query parameter")
         
         # Remove duplicates while preserving order
-        users_list = list(dict.fromkeys(users_list))
-        
+        users_list = tuple(sorted(set(users_list)))
+
         if not users_list:
             logger.warning("No valid users to process")
             return {}
         
         logger.info(f"Fetching contest data for {len(users_list)} users")
+        
+        cache_key = (name, users_list)
+        cached_result = obtained_cache.get(cache_key) 
+        if cached_result is not None:
+            logger.info(f"Using cached data for contest: {name}")
+            return cached_result
         
         # Fetch contest data for each user
         results: Dict[str, ObtainedUserResult] = {}
@@ -401,7 +409,9 @@ async def get_obtained_ratings(
             try:
                 # Call GraphQL helper to get user's contest performance
                 user_data = get_user_contest_ratings(name, user)
-                
+                if not user_data.get("contest_history_found"):
+                    logger.warning(f"Contest '{name}' not found in history for user '{user}'")
+                    return {}
                 # Convert to ObtainedUserResult
                 results[user] = ObtainedUserResult(**user_data)
                 
@@ -410,7 +420,9 @@ async def get_obtained_ratings(
                 results[user] = ObtainedUserResult(
                         error=f"Error: {str(e)}"
                     )
+                return {}
         
+        obtained_cache.put(cache_key, results)
         logger.info(f"Successfully processed {len(results)} user results")
         return results
     

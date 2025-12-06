@@ -8,6 +8,7 @@ for user contest performance data.
 import requests
 from typing import Dict, Any, Optional
 import logging
+from helpers.cache import LRUCache
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,10 @@ LEETCODE_HEADERS = {
 LEETCODE_GRAPHQL_URL = "https://leetcode.com/graphql/"
 
 
+# Global cache for GraphQL requests
+graphql_cache = LRUCache(capacity=43)
+
+
 def get_user_contest_ratings(contest_name: str, username: str) -> Dict[str, Any]:
     """
     Fetch a user's performance data for a specific contest from LeetCode GraphQL API.
@@ -39,9 +44,9 @@ def get_user_contest_ratings(contest_name: str, username: str) -> Dict[str, Any]
         - On error: error message
     
     Examples:
-        >>> get_user_contest_ratings("weekly-contest-476", "deekshith06")
+        >>> get_user_contest_ratings("weekly-contest-476", "abcd")
         {
-            "username": "deekshith06",
+            "username": "abcd",
             "rating": 1766.448,
             "ranking": 2790,
             "problemsSolved": 3,
@@ -51,6 +56,12 @@ def get_user_contest_ratings(contest_name: str, username: str) -> Dict[str, Any]
         >>> get_user_contest_ratings("weekly-contest-476", "")
         {"error": "Username is required"}
     """
+    # Check cache first
+    cache_key = (contest_name, username)
+    cached_result = graphql_cache.get(cache_key)
+    if cached_result is not None:
+        return cached_result
+
     # Validate contest name
     if not contest_name or not (
         contest_name.startswith("weekly-contest-") or 
@@ -126,10 +137,11 @@ def get_user_contest_ratings(contest_name: str, username: str) -> Dict[str, Any]
         contest_history = data.get("data", {}).get("userContestRankingHistory", [])
         if not contest_history:
             logger.warning(f"No contest history found for user '{username}'")
-            return {"error": "No contest history found for user"}
+            return {"error": "No contest history found for user","contest_history_found": False}
         
         # Search for the specific contest in reverse order (most recent first)
-        for contest_entry in reversed(contest_history):
+        for contest_entry in range(len(contest_history)-1,-1,-1):
+            contest_entry = contest_history[contest_entry]
             contest = contest_entry.get("contest", {})
             entry_title = contest.get("title", "").lower()
             
@@ -140,13 +152,17 @@ def get_user_contest_ratings(contest_name: str, username: str) -> Dict[str, Any]
                     "ranking": contest_entry.get("ranking"),
                     "problemsSolved": contest_entry.get("problemsSolved"),
                     "totalProblems": contest_entry.get("totalProblems"),
+                    "contest_history_found": True
                 }
                 logger.info(f"Found contest data for '{username}': rank {result['ranking']}")
+                
+                # Cache successful result
+                graphql_cache.put(cache_key, result)
                 return result
 
         # Contest not found in user's history
         logger.warning(f"Contest '{contest_name}' not found in history for user '{username}'")
-        return {"error": "Contest not found in user's history"}
+        return {"error": "Contest not found in user's history","contest_history_found": False}
 
     except requests.Timeout:
         logger.error(f"Timeout while fetching data for user '{username}'")

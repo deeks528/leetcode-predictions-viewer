@@ -37,8 +37,8 @@ def check_env_file():
 def run_dev():
     """Run in development mode with auto-reload."""
     print("🔧 Starting development server...")
-    print("📚 Swagger UI: http://localhost:{PORT}/docs")
-    print("📖 ReDoc: http://localhost:{PORT}/redoc")
+    print(f"📚 Swagger UI: http://localhost:{PORT}/docs")
+    print(f"📖 ReDoc: http://localhost:{PORT}/redoc")
     print()
     
     subprocess.run([

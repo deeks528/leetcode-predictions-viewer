@@ -100,7 +100,7 @@ Get predicted ratings for users in a specific contest.
 
 **Example:**
 ```bash
-curl "http://localhost:7667/lc?contestType=weekly-contest-&contestNo=476&username=deekshith06"
+curl "http://localhost:7667/lc?contestType=weekly-contest-&contestNo=476&username=abcd"
 ```
 
 **Response:**
@@ -109,8 +109,8 @@ curl "http://localhost:7667/lc?contestType=weekly-contest-&contestNo=476&usernam
   "contestName": "weekly-contest-476",
   "users": [
     {
-      "username": "deekshith06",
-      "link": "https://leetcode.com/u/deekshith06/",
+      "username": "abcd",
+      "link": "https://leetcode.com/u/abcd/",
       "attended": true,
       "rank": 6623,
       "old_rating": 1785.84,
@@ -135,21 +135,21 @@ Get actual contest performance data from LeetCode.
 
 **Example:**
 ```bash
-curl "http://localhost:7667/obtained?name=weekly-contest-476&usernames=deekshith06,S_Sarim"
+curl "http://localhost:7667/obtained?name=weekly-contest-476&usernames=abcd,xyz"
 ```
 
 **Response:**
 ```json
 [
   {
-    "username": "deekshith06",
+    "username": "abcd",
     "problemsSolved": 3,
     "totalProblems": 4,
     "ranking": 2790,
     "rating": 1766.448
   },
   {
-    "username": "S_Sarim",
+    "username": "xyz",
     "problemsSolved": 3,
     "totalProblems": 4,
     "ranking": 1585,
@@ -240,10 +240,10 @@ Use the interactive Swagger UI at http://localhost:7667/docs to test endpoints.
 curl http://localhost:7667/health
 
 # Get predictions
-curl "http://localhost:7667/lc?contestType=weekly-contest-&contestNo=476&username=deekshith06"
+curl "http://localhost:7667/lc?contestType=weekly-contest-&contestNo=476&username=abcd"
 
 # Get actual performance
-curl "http://localhost:7667/obtained?name=weekly-contest-476&usernames=deekshith06"
+curl "http://localhost:7667/obtained?name=weekly-contest-476&usernames=abcd"
 
 # Clear cache
 curl -X POST "http://localhost:7667/cache/clear?cache_type=all"

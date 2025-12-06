@@ -58,7 +58,7 @@ class LeetCodeRequest(BaseModel):
                 "contestType": "weekly-contest-",
                 "contestNo": "476",
                 "channelNo": "102",
-                "username": "deekshith06"
+                "username": "abcd"
             }
         }
 
@@ -90,7 +90,7 @@ class ObtainedRequest(BaseModel):
         json_schema_extra = {
             "example": {
                 "name": "weekly-contest-476",
-                "usernames": "deekshith06,S_Sarim",
+                "usernames": "abcd,xyz",
                 "channelNo": "102"
             }
         }
@@ -143,8 +143,8 @@ class UserResult(BaseModel):
         json_schema_extra = {
             "examples": [
                 {
-                    "username": "deekshith06",
-                    "link": "https://leetcode.com/u/deekshith06/",
+                    "username": "abcd",
+                    "link": "https://leetcode.com/u/abcd/",
                     "attended": True,
                     "rank": 6623,
                     "old_rating": 1785.84,
@@ -153,8 +153,8 @@ class UserResult(BaseModel):
                     "attendedContestsCount": 42
                 },
                 {
-                    "username": "Ram000",
-                    "link": "https://leetcode.com/u/Ram000/",
+                    "username": "ijk",
+                    "link": "https://leetcode.com/u/ijk/",
                     "attended": False,
                     "error": "❌ Not Participated"
                 }
@@ -185,8 +185,8 @@ class LeetCodeResponse(BaseModel):
                 "contestName": "weekly-contest-476",
                 "users": [
                     {
-                        "username": "deekshith06",
-                        "link": "https://leetcode.com/u/deekshith06/",
+                        "username": "abcd",
+                        "link": "https://leetcode.com/u/abcd/",
                         "attended": True,
                         "rank": 6623,
                         "old_rating": 1785.84,
